@@ -1,24 +1,24 @@
 import './App.css';
-import { Cell } from './components/Cell';
+import { Board } from './components/Board';
 import { ShipList } from './components/ShipList';
-import { useGameStore } from './store/gameStore';
-import styles from './styles/board.module.css';
+import { StartButton } from './components/StartButton';
+import { StatusBar } from './components/StatusBar';
+import { selectCurrentShip, useGameStore } from './store/gameStore';
 
 function App() {
-  const board = useGameStore((state) => state.board);
-  console.log(board);
+  const selectedShip = useGameStore(selectCurrentShip);
+  const state = useGameStore((state) => state);
+  console.log(state);
   return (
     <>
+      <StatusBar />
       <ShipList />
-      <div
-        className={styles.board}
-        style={{
-          gridTemplateColumns: `repeat(${board.length},  1fr)`,
-          gridTemplateRows: `repeat(${board.length}, 1fr)`,
-        }}
-      >
-        {board.map((row) => row.map((cell) => <Cell name={cell} />))}
-      </div>
+      <br />
+      <span>{selectedShip?.name}</span>
+      <br />
+      <Board />
+      <br />
+      <StartButton />
     </>
   );
 }
