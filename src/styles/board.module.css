@@ -20,3 +20,7 @@
 .missed {
   background-color: #dbd7d7;
 }
+
+.selected {
+  border-color: #11aa22;
+}

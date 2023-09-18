@@ -19,6 +19,8 @@ export const Board: FC = () => {
   const ship = useGameStore((state) => state.previewLayout.selectedShip);
   const placeShip = useGameStore((state) => state.placeShip);
   const status = useGameStore((state) => state.status);
+  const attackPossition = useGameStore((state) => state.attackPosition);
+  // const layoutSelection = useGameStore((state) => state.previewLayout.)
   const [pos, setPos] = useState<PosState>({
     first: null,
     last: null,
@@ -30,6 +32,8 @@ export const Board: FC = () => {
         handleCellPreGame(position);
         break;
       case 'playing':
+        handleCellPlaying(position);
+        break;
       case 'end':
       default:
         console.log('NOOP');
@@ -60,7 +64,7 @@ export const Board: FC = () => {
   };
 
   const handleCellPlaying = (position: [number, number]) => {
-    attackPossition();
+    attackPossition(position);
   };
 
   useEffect(() => {
@@ -73,6 +77,7 @@ export const Board: FC = () => {
         isPathEmpty(path, board)
       ) {
         placeShip(ship, path);
+        setPos({ first: null, last: null });
       } else {
         setPos({ first: null, last: null });
       }
@@ -93,6 +98,8 @@ export const Board: FC = () => {
             onClick={() => handleCellClick([rowIndex, colIndex])}
             name={cell}
             status={board[rowIndex][colIndex]}
+            selected={pos.first}
+            pos={[rowIndex, colIndex]}
           />
         ))
       )}
