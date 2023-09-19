@@ -1,4 +1,5 @@
 export enum CellStatus {
+  DESTROYED = -2,
   MISSED = -1,
   EMPTY = 0,
   OCCUPIED = 1,
@@ -26,12 +27,12 @@ export const calculatePath = (
   }
   const newArr = [pos1];
   if (pos1[0] === pos2[0]) {
-    for (let i = 0; i < Math.abs(pos1[1] - pos2[1]); i++) {
+    for (let i = 0; i < Math.abs(pos1[1] - pos2[1]) - 1; i++) {
       newArr.push([pos1[0], pos1[1] + i + 1]);
     }
   }
   if (pos1[1] === pos1[1]) {
-    for (let i = 0; i < Math.abs(pos1[0] - pos2[0]); i++) {
+    for (let i = 0; i < Math.abs(pos1[0] - pos2[0]) - 1; i++) {
       newArr.push([pos1[0] + i + 1, pos1[1]]);
     }
   }

@@ -1,5 +1,7 @@
 import './App.css';
 import { Board } from './components/Board';
+import { Result } from './components/Result';
+import { ShipHits } from './components/ShipHits';
 import { ShipList } from './components/ShipList';
 import { StartButton } from './components/StartButton';
 import { StatusBar } from './components/StatusBar';
@@ -18,7 +20,9 @@ function App() {
       <br />
       <Board />
       <br />
+      <ShipHits />
       <StartButton />
+      <Result />
     </>
   );
 }

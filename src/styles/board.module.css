@@ -24,3 +24,10 @@
 .selected {
   border-color: #11aa22;
 }
+
+.destroyed {
+  background-color: #ff0011;
+  border-color: #ff9900;
+  /* box-shadow: 0 0 2px 1px rgb(248, 5, 5), 0 0 4px 2px rgb(255, 174, 0),
+    0 0 6px 3px rgb(238, 255, 0); */
+}

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import { Ship } from '../models/ship.models';
+import { Ship, ShipName } from '../models/ship.models';
 import { AVAILABLE_SHIPS } from '../utils/shipTypes';
 import { STATUS } from '../models/status.models';
 import { CellStatus, calculatePath } from '../utils';
@@ -24,6 +23,7 @@ export interface GameStore {
     usedShips: Ship[];
   };
   activeShips: ActiveShip[];
+  history: {ship: ShipName | null, pos: [number, number], type: 'HIT' | 'MISS'}[]
 
   selectShip: (ship: Ship) => void;
   placeShip: (ship: Ship, positions: [number, number][]) => void;
@@ -43,9 +43,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
       first: null,
       last: null,
     },
-    usedShips: [] as Ship[],
+    usedShips: [] satisfies Ship[],
   },
-  activeShips: [] as ActiveShip[],
+  activeShips: [] satisfies ActiveShip[],
+  history: [] satisfies { ship: ShipName, pos: [number, number], type: 'HIT' | 'MISS' }[],
 
   selectShip: (ship: Ship) => {
     set((state) => {
@@ -55,21 +56,46 @@ export const useGameStore = create<GameStore>((set, get) => ({
     });
   },
   attackPosition: (position: [number, number]) => {
-    const board = get().board;
-    const activeShips = get().activeShips;
+    const {board, activeShips, history} = get();
     const cellStatus = CellStatus[board[position[0]][position[1]]];
+    let status = get().status;
     if (cellStatus === 'EMPTY') {
       board[position[0]][position[1]] = -1;
+      history.push({
+        ship: null,
+        pos: position,
+        type: 'MISS'
+      })
     } else {
       board[position[0]][position[1]] = 2;
+    
       const shipIndex = activeShips.findIndex((ship) =>
         ship.path.find(
           (path) => path[0] === position[0] && path[1] === position[1]
         )
       );
       activeShips[shipIndex].hits.push(position);
+      activeShips[shipIndex].destroyed =
+        activeShips[shipIndex].hits.length ===
+        activeShips[shipIndex].path.length;
+
+      if (activeShips[shipIndex].destroyed) {
+        activeShips[shipIndex].path.forEach(
+          (pos) => (board[pos[0]][pos[1]] = -2)
+        );
+      }
+        history.push({
+        ship: activeShips[shipIndex].name,
+        pos: position,
+        type: 'HIT'
+      })
     }
-    set({ board, activeShips });
+    if (activeShips.map((ship) => ship.destroyed).every((value) => value)) {
+      console.log('END');
+      status = 'end';
+    }
+
+    set({ board, activeShips, status });
   },
   placeShip: (ship: Ship, positions: [number, number][]) => {
     set((state) => {

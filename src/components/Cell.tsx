@@ -25,13 +25,13 @@ export const Cell: FC<CellProps> = ({
         return 'selected';
       }
       if (CellStatus[status] === 'EMPTY') return '';
-      return CellStatus[status].toLowerCase();
+      return CellStatus[status]?.toLowerCase();
     }
     if (CellStatus[status] === 'OCCUPIED') {
       return '';
     }
     if (CellStatus[status] === 'EMPTY') return '';
-    return CellStatus[status].toLowerCase();
+    return CellStatus[status]?.toLowerCase();
   };
 
   return (
