@@ -1,11 +1,13 @@
 .board {
   display: grid;
+  position: relative;
   /* gap: 8px; */
 }
 
 .cell {
   background-color: transparent;
   border: 1px solid black;
+  box-sizing: border-box;
   border-radius: 0;
 }
 
@@ -30,4 +32,15 @@
   border-color: #ff9900;
   /* box-shadow: 0 0 2px 1px rgb(248, 5, 5), 0 0 4px 2px rgb(255, 174, 0),
     0 0 6px 3px rgb(238, 255, 0); */
+}
+
+.floatingship {
+  position: absolute;
+  /* width: 160px; */
+  height: 32px;
+}
+
+.vertical {
+  transform: rotate(90deg);
+  transform-origin: bottom left;
 }
