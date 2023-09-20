@@ -10,7 +10,7 @@
 }
 
 .occupied {
-  background-color: #005f6a;
+  background-color: var(--primary-color);
 }
 
 .hit {

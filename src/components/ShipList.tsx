@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { selectAvailableShips, useGameStore } from '../store/gameStore';
 import { Ship } from './Ship';
-import { ShipName } from '../models/ship.models';
 import styles from '../styles/ship.module.css';
 
 export const ShipList: FC = () => {
@@ -15,7 +14,7 @@ export const ShipList: FC = () => {
   return (
     <div>
       {/* <button onClick={changeDirection}>🔄</button> */}
-      <ul style={{ flexDirection: direction }} className={styles.shipList}>
+      <ul style={{ flexDirection: direction }} className={styles.shiplist}>
         {ships.map(({ name, size }) => (
           <li className={direction === 'row' ? styles.rotate : ''}>
             <Ship name={name} length={size} />
