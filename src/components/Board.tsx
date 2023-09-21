@@ -8,11 +8,25 @@ import {
   isPathSameSizeAsShip,
   isStraightLine,
 } from '../utils';
+import CarrierImage from '../assets/Carrier Shape.png';
+import CruiserImage from '../assets/Cruiser Shape.png';
+import AircraftImage from '../assets/Aircraft Shape.png';
+import BattleShipImage from '../assets/Battleship Shape.png';
+import SubmarineImage from '../assets/Submarine Shape.png';
+import { ShipName } from '../models/ship.models';
 
 type PosState = {
   first: [number, number] | null;
   last: [number, number] | null;
 };
+
+const ShipImages: Record<ShipName, string> = {
+  carrier: CarrierImage,
+  cruiser: CruiserImage,
+  battleship: BattleShipImage,
+  submarine: SubmarineImage,
+  destroyer: AircraftImage,
+} as const;
 
 export const Board: FC = () => {
   const board = useGameStore((state) => state.board);
@@ -20,6 +34,7 @@ export const Board: FC = () => {
   const placeShip = useGameStore((state) => state.placeShip);
   const status = useGameStore((state) => state.status);
   const attackPossition = useGameStore((state) => state.attackPosition);
+  const activeShips = useGameStore((state) => state.activeShips);
   // const layoutSelection = useGameStore((state) => state.previewLayout.)
   const [pos, setPos] = useState<PosState>({
     first: null,
@@ -103,6 +118,17 @@ export const Board: FC = () => {
           />
         ))
       )}
+      {activeShips.map((ship) => (
+        <img
+          src={ShipImages[ship.name]}
+          className={styles.floatingship}
+          style={{
+            width: `${ship.size * 32}px`,
+            top: `${ship.path[0][0] * 32}px`,
+            left: `${ship.path[0][1] * 32}px`,
+          }}
+        />
+      ))}
     </div>
   );
 };
