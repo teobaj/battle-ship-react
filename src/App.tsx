@@ -1,4 +1,5 @@
 import { Board } from './components/Board';
+import { ResetButton } from './components/ResetButton';
 import { Result } from './components/Result';
 import { ShipHits } from './components/ShipHits';
 import { ShipList } from './components/ShipList';
@@ -15,11 +16,14 @@ function App() {
     <div className={styles.app}>
       <StatusBar />
       <ShipList />
-      <ShipHits />
       <span>{selectedShip?.name}</span>
-      <Board />
-      <StartButton />
+      <div className={styles.wrapper}>
+        <ShipHits />
+        <Board />
+      </div>
       <Result />
+      <StartButton />
+      <ResetButton />
     </div>
   );
 }

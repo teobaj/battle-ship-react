@@ -2,6 +2,7 @@ import { FC, MouseEventHandler } from 'react';
 import styles from '../styles/board.module.css';
 import { CellStatus } from '../utils';
 import { useGameStore } from '../store/gameStore';
+import { CELL_IMAGES } from '../utils/cellImages';
 
 type CellProps = {
   name: string | number;
@@ -33,10 +34,10 @@ export const Cell: FC<CellProps> = ({
     if (CellStatus[status] === 'EMPTY') return '';
     return CellStatus[status]?.toLowerCase();
   };
-
   return (
     <button
       className={`${styles.cell} ${styles[getCssClass()]}`}
+      style={{ backgroundImage: `url(${CELL_IMAGES[status]})` }}
       onClick={onClick}
     ></button>
   );

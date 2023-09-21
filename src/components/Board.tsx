@@ -8,25 +8,14 @@ import {
   isPathSameSizeAsShip,
   isStraightLine,
 } from '../utils';
-import CarrierImage from '../assets/Carrier Shape.png';
-import CruiserImage from '../assets/Cruiser Shape.png';
-import AircraftImage from '../assets/Aircraft Shape.png';
-import BattleShipImage from '../assets/Battleship Shape.png';
-import SubmarineImage from '../assets/Submarine Shape.png';
-import { ShipName } from '../models/ship.models';
+
+import { ActiveShip, ShipName } from '../models/ship.models';
+import { SHIP_IMAGES } from '../utils/shipImages';
 
 type PosState = {
   first: [number, number] | null;
   last: [number, number] | null;
 };
-
-const ShipImages: Record<ShipName, string> = {
-  carrier: CarrierImage,
-  cruiser: CruiserImage,
-  battleship: BattleShipImage,
-  submarine: SubmarineImage,
-  destroyer: AircraftImage,
-} as const;
 
 export const Board: FC = () => {
   const board = useGameStore((state) => state.board);
@@ -40,6 +29,25 @@ export const Board: FC = () => {
     first: null,
     last: null,
   });
+
+  const getShipStyles = (ship: ActiveShip): React.CSSProperties => {
+    const isVertical = ship.path[0][1] === ship.path[1][1];
+    let styles: React.CSSProperties = {
+      width: `${ship.size * 32}px`,
+      top: `${ship.path[0][0] * 32}px`,
+      left: `${ship.path[0][1] * 32}px`,
+    };
+    if (isVertical) {
+      styles = {
+        ...styles,
+        transform: `rotate(90deg)`,
+        transformOrigin: 'bottom left',
+        top: `${ship.path[0][0] * 32 - 32}px`,
+      };
+    }
+
+    return styles;
+  };
 
   const handleCellClick = (position: [number, number]) => {
     switch (status) {
@@ -118,17 +126,14 @@ export const Board: FC = () => {
           />
         ))
       )}
-      {activeShips.map((ship) => (
-        <img
-          src={ShipImages[ship.name]}
-          className={styles.floatingship}
-          style={{
-            width: `${ship.size * 32}px`,
-            top: `${ship.path[0][0] * 32}px`,
-            left: `${ship.path[0][1] * 32}px`,
-          }}
-        />
-      ))}
+      {status === 'pregame' &&
+        activeShips.map((ship) => (
+          <img
+            src={SHIP_IMAGES[ship.name]}
+            className={styles.floatingship}
+            style={getShipStyles(ship)}
+          />
+        ))}
     </div>
   );
 };

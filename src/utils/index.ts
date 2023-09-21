@@ -57,7 +57,6 @@ export const isPathEmpty = (
 ): boolean => {
   path.forEach((pos) => {
     if (board[pos[0]][pos[1]]) {
-      console.log(board[pos[0]][pos[1]]);
       return false;
     }
   });
