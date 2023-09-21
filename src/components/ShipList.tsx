@@ -10,7 +10,6 @@ export const ShipList: FC = () => {
   const changeDirection = () => {
     setDirection((state) => (state === 'column' ? 'row' : 'column'));
   };
-  console.log(ships);
   return (
     <div>
       {/* <button onClick={changeDirection}>🔄</button> */}

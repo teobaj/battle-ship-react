@@ -1,14 +1,10 @@
 import { create } from 'zustand';
-import { Ship, ShipName } from '../models/ship.models';
+import { ActiveShip, Ship, ShipName } from '../models/ship.models';
 import { AVAILABLE_SHIPS } from '../utils/shipTypes';
 import { STATUS } from '../models/status.models';
 import { CellStatus, calculatePath } from '../utils';
 
-type ActiveShip = Ship & {
-  path: number[][];
-  hits: number[][];
-  destroyed: boolean;
-};
+
 
 export interface GameStore {
   status: STATUS;
@@ -29,12 +25,14 @@ export interface GameStore {
   placeShip: (ship: Ship, positions: [number, number][]) => void;
   setStatus: (status: STATUS) => void;
   attackPosition: (position: [number, number]) => void;
+  resetGame: () => void
 }
 
 const getInitalBoard = (length: number = 10): number[][] =>
   Array.from({ length }, () => Array.from({ length }).fill(0)) as number[][];
 
-export const useGameStore = create<GameStore>((set, get) => ({
+
+const intialState: Pick<GameStore, 'board' | 'status' | 'previewLayout' | 'activeShips'| 'history'> = {
   board: getInitalBoard(),
   status: 'pregame',
   previewLayout: {
@@ -48,6 +46,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
   activeShips: [] satisfies ActiveShip[],
   history: [] satisfies { ship: ShipName, pos: [number, number], type: 'HIT' | 'MISS' }[],
 
+}
+
+export const useGameStore = create<GameStore>((set, get) => ({
+  ...intialState,
   selectShip: (ship: Ship) => {
     set((state) => {
       return {
@@ -91,7 +93,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
       })
     }
     if (activeShips.map((ship) => ship.destroyed).every((value) => value)) {
-      console.log('END');
       status = 'end';
     }
 
@@ -124,6 +125,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
   setStatus: (status: STATUS) => {
     set({ status });
   },
+  resetGame: () => {
+    intialState.board = getInitalBoard()
+    set({...intialState})
+  }
 }));
 
 export const selectAvailableShips = (state: GameStore) => {

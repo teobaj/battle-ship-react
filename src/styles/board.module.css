@@ -9,6 +9,7 @@
   border: 1px solid black;
   box-sizing: border-box;
   border-radius: 0;
+  background-size: cover;
 }
 
 .occupied {

@@ -23,6 +23,32 @@
   transform: rotate(90deg);
 }
 
-.shiphits {
+.shiphits_list {
   border: 1px solid var(--primary-color);
+  margin: 0 !important;
+  /* width: 240px; */
+  /* max-width: 240px; */
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shiphits_item {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background-color: var(--primary-color);
+}
+
+.shiphits_item img {
+  max-height: 24px;
+  mix-blend-mode: multiply;
+}
+
+.shiphits_hit {
+  display: flex;
+}
+
+.shiphits_ship {
 }
