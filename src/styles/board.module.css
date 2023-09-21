@@ -1,0 +1,47 @@
+.board {
+  display: grid;
+  position: relative;
+  /* gap: 8px; */
+}
+
+.cell {
+  background-color: transparent;
+  border: 1px solid black;
+  box-sizing: border-box;
+  border-radius: 0;
+  background-size: cover;
+}
+
+.occupied {
+  background-color: var(--primary-color);
+}
+
+.hit {
+  background-color: #ff0011;
+}
+
+.missed {
+  background-color: #dbd7d7;
+}
+
+.selected {
+  border-color: #11aa22;
+}
+
+.destroyed {
+  background-color: #ff0011;
+  border-color: #ff9900;
+  /* box-shadow: 0 0 2px 1px rgb(248, 5, 5), 0 0 4px 2px rgb(255, 174, 0),
+    0 0 6px 3px rgb(238, 255, 0); */
+}
+
+.floatingship {
+  position: absolute;
+  /* width: 160px; */
+  height: var(--cell-size);
+}
+
+.vertical {
+  transform: rotate(90deg);
+  transform-origin: bottom left;
+}
