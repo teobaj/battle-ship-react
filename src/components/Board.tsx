@@ -2,15 +2,11 @@ import { FC, useEffect, useState } from 'react';
 import styles from '../styles/board.module.css';
 import { useGameStore } from '../store/gameStore';
 import { Cell } from './Cell';
-import {
-  calculatePath,
-  isPathEmpty,
-  isPathSameSizeAsShip,
-  isStraightLine,
-} from '../utils';
+import { calculatePath, isPathEmpty, isPathSameSizeAsShip, isStraightLine } from '../utils';
 
-import { ActiveShip, ShipName } from '../models/ship.models';
+import { ActiveShip } from '../models/ship.models';
 import { SHIP_IMAGES } from '../utils/shipImages';
+import { useLayoutStore } from '../store/layoutStore';
 
 type PosState = {
   first: [number, number] | null;
@@ -18,13 +14,14 @@ type PosState = {
 };
 
 export const Board: FC = () => {
+  const cellSize = useLayoutStore((state) => state.cellSize);
   const board = useGameStore((state) => state.board);
   const ship = useGameStore((state) => state.previewLayout.selectedShip);
   const placeShip = useGameStore((state) => state.placeShip);
   const status = useGameStore((state) => state.status);
   const attackPossition = useGameStore((state) => state.attackPosition);
   const activeShips = useGameStore((state) => state.activeShips);
-  // const layoutSelection = useGameStore((state) => state.previewLayout.)
+
   const [pos, setPos] = useState<PosState>({
     first: null,
     last: null,
@@ -33,16 +30,16 @@ export const Board: FC = () => {
   const getShipStyles = (ship: ActiveShip): React.CSSProperties => {
     const isVertical = ship.path[0][1] === ship.path[1][1];
     let styles: React.CSSProperties = {
-      width: `${ship.size * 32}px`,
-      top: `${ship.path[0][0] * 32}px`,
-      left: `${ship.path[0][1] * 32}px`,
+      width: `${ship.size * cellSize}px`,
+      top: `${ship.path[0][0] * cellSize}px`,
+      left: `${ship.path[0][1] * cellSize}px`,
     };
     if (isVertical) {
       styles = {
         ...styles,
         transform: `rotate(90deg)`,
         transformOrigin: 'bottom left',
-        top: `${ship.path[0][0] * 32 - 32}px`,
+        top: `${ship.path[0][0] * cellSize - cellSize}px`,
       };
     }
 
@@ -111,8 +108,8 @@ export const Board: FC = () => {
     <div
       className={styles.board}
       style={{
-        gridTemplateColumns: `repeat(${board.length},  32px)`,
-        gridTemplateRows: `repeat(${board.length}, 32px)`,
+        gridTemplateColumns: `repeat(${board.length},  ${cellSize}px)`,
+        gridTemplateRows: `repeat(${board.length}, ${cellSize}px)`,
       }}
     >
       {board.map((row, rowIndex) =>
@@ -128,11 +125,7 @@ export const Board: FC = () => {
       )}
       {status === 'pregame' &&
         activeShips.map((ship) => (
-          <img
-            src={SHIP_IMAGES[ship.name]}
-            className={styles.floatingship}
-            style={getShipStyles(ship)}
-          />
+          <img src={SHIP_IMAGES[ship.name]} className={styles.floatingship} style={getShipStyles(ship)} />
         ))}
     </div>
   );

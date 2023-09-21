@@ -38,7 +38,7 @@
 .floatingship {
   position: absolute;
   /* width: 160px; */
-  height: 32px;
+  height: var(--cell-size);
 }
 
 .vertical {

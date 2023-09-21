@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   --primary-color: #005f6a;
+  --cell-size: 32px;
 }
 
 a {
@@ -63,5 +64,11 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --cell-size: 24px;
   }
 }

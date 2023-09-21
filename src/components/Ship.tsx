@@ -18,7 +18,7 @@ export const Ship: FC<ShipProps> = ({ name, length }) => {
       className={styles.ship}
       onClick={() => selectShip({ name: name, size: length, count: 1 })}
     >
-      {name}
+      {name} | size: {length}
     </button>
   );
 };

@@ -2,9 +2,7 @@ import { create } from 'zustand';
 import { ActiveShip, Ship, ShipName } from '../models/ship.models';
 import { AVAILABLE_SHIPS } from '../utils/shipTypes';
 import { STATUS } from '../models/status.models';
-import { CellStatus, calculatePath } from '../utils';
-
-
+import { CellStatus } from '../utils';
 
 export interface GameStore {
   status: STATUS;
@@ -19,20 +17,19 @@ export interface GameStore {
     usedShips: Ship[];
   };
   activeShips: ActiveShip[];
-  history: {ship: ShipName | null, pos: [number, number], type: 'HIT' | 'MISS'}[]
+  history: { ship: ShipName | null; pos: [number, number]; type: 'HIT' | 'MISS' }[];
 
   selectShip: (ship: Ship) => void;
   placeShip: (ship: Ship, positions: [number, number][]) => void;
   setStatus: (status: STATUS) => void;
   attackPosition: (position: [number, number]) => void;
-  resetGame: () => void
+  resetGame: () => void;
 }
 
 const getInitalBoard = (length: number = 10): number[][] =>
   Array.from({ length }, () => Array.from({ length }).fill(0)) as number[][];
 
-
-const intialState: Pick<GameStore, 'board' | 'status' | 'previewLayout' | 'activeShips'| 'history'> = {
+const intialState: Pick<GameStore, 'board' | 'status' | 'previewLayout' | 'activeShips' | 'history'> = {
   board: getInitalBoard(),
   status: 'pregame',
   previewLayout: {
@@ -44,9 +41,8 @@ const intialState: Pick<GameStore, 'board' | 'status' | 'previewLayout' | 'activ
     usedShips: [] satisfies Ship[],
   },
   activeShips: [] satisfies ActiveShip[],
-  history: [] satisfies { ship: ShipName, pos: [number, number], type: 'HIT' | 'MISS' }[],
-
-}
+  history: [] satisfies { ship: ShipName; pos: [number, number]; type: 'HIT' | 'MISS' }[],
+};
 
 export const useGameStore = create<GameStore>((set, get) => ({
   ...intialState,
@@ -58,7 +54,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     });
   },
   attackPosition: (position: [number, number]) => {
-    const {board, activeShips, history} = get();
+    const { board, activeShips, history } = get();
     const cellStatus = CellStatus[board[position[0]][position[1]]];
     let status = get().status;
     if (cellStatus === 'EMPTY') {
@@ -66,31 +62,25 @@ export const useGameStore = create<GameStore>((set, get) => ({
       history.push({
         ship: null,
         pos: position,
-        type: 'MISS'
-      })
+        type: 'MISS',
+      });
     } else {
       board[position[0]][position[1]] = 2;
-    
+
       const shipIndex = activeShips.findIndex((ship) =>
-        ship.path.find(
-          (path) => path[0] === position[0] && path[1] === position[1]
-        )
+        ship.path.find((path) => path[0] === position[0] && path[1] === position[1])
       );
       activeShips[shipIndex].hits.push(position);
-      activeShips[shipIndex].destroyed =
-        activeShips[shipIndex].hits.length ===
-        activeShips[shipIndex].path.length;
+      activeShips[shipIndex].destroyed = activeShips[shipIndex].hits.length === activeShips[shipIndex].path.length;
 
       if (activeShips[shipIndex].destroyed) {
-        activeShips[shipIndex].path.forEach(
-          (pos) => (board[pos[0]][pos[1]] = -2)
-        );
+        activeShips[shipIndex].path.forEach((pos) => (board[pos[0]][pos[1]] = -2));
       }
-        history.push({
+      history.push({
         ship: activeShips[shipIndex].name,
         pos: position,
-        type: 'HIT'
-      })
+        type: 'HIT',
+      });
     }
     if (activeShips.map((ship) => ship.destroyed).every((value) => value)) {
       status = 'end';
@@ -110,15 +100,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
         previewLayout: {
           ...state.previewLayout,
           usedShips: [...state.previewLayout.usedShips, ship],
-          availableShips: state.previewLayout.availableShips.filter(
-            (s) => s.name !== ship.name
-          ),
+          availableShips: state.previewLayout.availableShips.filter((s) => s.name !== ship.name),
           selectedShip: undefined,
         },
-        activeShips: [
-          ...state.activeShips,
-          { ...ship, hits: [], path: positions, destroyed: false },
-        ],
+        activeShips: [...state.activeShips, { ...ship, hits: [], path: positions, destroyed: false }],
       };
     });
   },
@@ -126,9 +111,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({ status });
   },
   resetGame: () => {
-    intialState.board = getInitalBoard()
-    set({...intialState})
-  }
+    intialState.board = getInitalBoard();
+    set({ ...intialState });
+  },
 }));
 
 export const selectAvailableShips = (state: GameStore) => {
